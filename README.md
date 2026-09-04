@@ -72,10 +72,10 @@ This repository uses a GitHub Actions workflow (`.github/workflows/part1-ci.yml`
 
 **Successful build screenshot:**
 
-_[Insert screenshot of the green GitHub Actions build here before submitting]_
+
 
 ## Video Demonstration
 
-YouTube Link (Unlisted): _[INSERT YOUR YOUTUBE LINK HERE]_
+YouTube Link (Unlisted): https://youtube.com/shorts/cEQM4lH_J-I?si=cw2zlIxlZfqt_T7D 
 
 The video walks through the RaceDay ERD, explains the entities, primary/foreign keys and cardinality, covers the API endpoint plan and role-based access decisions, and runs the SQL script live in SSMS to demonstrate that it builds and seeds the database successfully.
