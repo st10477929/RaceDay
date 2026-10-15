@@ -1,0 +1,32 @@
+name: RaceDay API CI
+
+# Builds the solution and runs all unit tests on every push and pull request.
+# NOTE: if this solution lives in a sub-folder of your repo, uncomment the
+# "defaults" block below and set working-directory to that folder.
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     working-directory: Part2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore RaceDay.sln
+
+      - name: Build
+        run: dotnet build RaceDay.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test RaceDay.sln --configuration Release --no-build --verbosity normal
