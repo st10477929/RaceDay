@@ -11,7 +11,7 @@ Built for **PROG6212 – POE Part 2** with ASP.NET Core Web API (C#), Entity Fra
 | | |
 |---|---|
 | **Student** | Baarabile Faith Ndlalane (ST10477929) |
-| **Video demo** | [Watch on YouTube (unlisted)](PASTE-YOUTUBE-LINK-HERE) |
+| **Video demo** | https://youtu.be/txvRwZWfWS4?feature=shared |
 | **Repository** | https://github.com/st10477929/RaceDay |
 
 ---
