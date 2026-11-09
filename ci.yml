@@ -1,8 +1,7 @@
-name: RaceDay API CI
+name: RaceDay CI
 
-# Builds the solution and runs all unit tests on every push and pull request.
-# NOTE: if this solution lives in a sub-folder of your repo, uncomment the
-# "defaults" block below and set working-directory to that folder.
+# Builds the API, tests and MVC project, checks the repository structure, and builds the Docker image.
+# NOTE: if this solution lives in a sub-folder of your repo, uncomment the "defaults" block and set the folder name.
 on:
   push:
   pull_request:
@@ -12,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     # defaults:
     #   run:
-    #     working-directory: Part2
+    #     working-directory: Part3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,8 +24,19 @@ jobs:
       - name: Restore
         run: dotnet restore RaceDay.sln
 
-      - name: Build
+      - name: Build API, tests and MVC project
         run: dotnet build RaceDay.sln --configuration Release --no-restore
 
       - name: Test
         run: dotnet test RaceDay.sln --configuration Release --no-build --verbosity normal
+
+      - name: Validate repository structure
+        run: |
+          test -f RaceDay.Api/RaceDay.Api.csproj
+          test -f RaceDay.Web/RaceDay.Web.csproj
+          test -f RaceDay.Web/Dockerfile
+          test -f README.md
+          echo "Repository structure OK"
+
+      - name: Build Docker image
+        run: docker build -t raceday-web RaceDay.Web
