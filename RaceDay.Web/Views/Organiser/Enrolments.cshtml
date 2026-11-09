@@ -1,0 +1,18 @@
+@model EnrolmentsViewModel
+@{ ViewData["Title"] = "Enrolments"; }
+<h1>Enrolments</h1>
+<p class="text-muted">@Model.Event.EventName &middot; @Model.Enrolments.Count participant(s)</p>
+@if (Model.Enrolments.Count == 0) { <p class="text-muted">Nobody has enrolled yet.</p> }
+else
+{
+  <div class="table-responsive"><table class="table align-middle bg-white">
+    <thead><tr><th>Participant</th><th>Category</th><th>Enrolled on</th><th>Status</th></tr></thead>
+    <tbody>
+    @foreach (var e in Model.Enrolments)
+    {
+      <tr><td>@e.ParticipantName</td><td>@e.CategoryName</td><td>@e.EnrolmentDate.ToString("d MMM yyyy")</td><td><span class="badge @UiHelpers.StatusBadge(e.Status)">@e.Status</span></td></tr>
+    }
+    </tbody></table></div>
+}
+<a class="btn btn-outline-secondary" asp-action="Events">&larr; My events</a>
+<a class="btn btn-rd" asp-action="Results" asp-route-eventId="@Model.Event.EventId">Enter results</a>

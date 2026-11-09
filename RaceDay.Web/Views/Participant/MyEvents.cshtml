@@ -1,0 +1,33 @@
+@model List<EnrolmentDto>
+@{ ViewData["Title"] = "My events"; var dates = ViewData["EventDates"] as Dictionary<int, DateTime> ?? new(); }
+<h1 class="mb-3">My events</h1>
+@if (Model.Count == 0)
+{
+  <p class="text-muted">You have not enrolled for any events yet.</p>
+  <a class="btn btn-rd" asp-controller="Home" asp-action="Index">Browse events</a>
+}
+else
+{
+  <div class="table-responsive"><table class="table align-middle bg-white">
+    <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var e in Model)
+    {
+      var date = dates.TryGetValue(e.EventId, out var d) ? d : (DateTime?)null;
+      <tr>
+        <td><a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId">@e.EventName</a></td>
+        <td>@(date?.ToString("d MMM yyyy") ?? "-")</td>
+        <td>@e.CategoryName</td>
+        <td><span class="badge @UiHelpers.StatusBadge(e.Status)">@e.Status</span></td>
+        <td class="text-end">
+          @if (date is null || date.Value.Date >= DateTime.Today)
+          {
+            <form asp-action="Cancel" asp-route-id="@e.EnrolmentId" method="post" onsubmit="return confirm('Cancel this enrolment?');">
+              <button class="btn btn-outline-danger btn-sm" type="submit">Cancel</button>
+            </form>
+          }
+        </td>
+      </tr>
+    }
+    </tbody></table></div>
+}

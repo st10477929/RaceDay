@@ -1,0 +1,12 @@
+# One command to build and start the MVC app:  docker compose up --build
+# The Part 2 API must already be running on the host at port 5080.
+services:
+  web:
+    build: ./RaceDay.Web
+    image: raceday-web
+    ports:
+      - "8080:8080"
+    environment:
+      ApiBaseUrl: "http://host.docker.internal:5080/"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

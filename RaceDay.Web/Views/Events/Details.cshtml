@@ -1,0 +1,61 @@
+@model EventDetailsViewModel
+@{ ViewData["Title"] = Model.Event.EventName; var role = Context.Session.GetString(SessionKeys.Role); }
+@if (!string.IsNullOrEmpty(Model.Event.BannerUrl)) { <img class="rd-hero mb-3" src="@Model.Event.BannerUrl" alt="@Model.Event.EventName banner" /> }
+else { <div class="rd-hero mb-3"></div> }
+
+<div class="d-flex flex-wrap justify-content-between align-items-start">
+  <div>
+    <span class="badge rd-role mb-2">@Model.Event.EventType</span>
+    <h1>@Model.Event.EventName</h1>
+    <p class="text-muted mb-1">@Model.Event.EventDate.ToString("dddd, d MMMM yyyy") &middot; @Model.Event.Location</p>
+    <p class="text-muted">Organised by @Model.Event.OrganiserName</p>
+  </div>
+  @if (Model.IsPast) { <span class="badge text-bg-secondary fs-6">Completed</span> }
+</div>
+@if (!string.IsNullOrWhiteSpace(Model.Event.Description)) { <p class="lead">@Model.Event.Description</p> }
+
+<h3 class="mt-4">Categories</h3>
+@if (Model.Categories.Count == 0) { <p class="text-muted">No categories have been added yet.</p> }
+else
+{
+  <div class="table-responsive"><table class="table align-middle bg-white">
+    <thead><tr><th>Category</th><th>Distance</th><th>Entry fee</th><th>Places</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var c in Model.Categories)
+    {
+      <tr>
+        <td>@c.CategoryName</td><td>@c.Distance km</td><td>R @c.EntryFee.ToString("0.00")</td><td>@c.MaxParticipants</td>
+        <td class="text-end">
+          @if (role == RoleNames.Participant)
+          {
+            if (Model.EnrolledCategoryIds.Contains(c.CategoryId)) { <span class="badge text-bg-success">Enrolled</span> }
+            else if (Model.IsPast) { <span class="text-muted small">Closed</span> }
+            else
+            {
+              <form asp-controller="Events" asp-action="Enrol" method="post" class="d-inline">
+                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                <input type="hidden" name="categoryId" value="@c.CategoryId" />
+                <button class="btn btn-rd btn-sm" type="submit">Enter event</button>
+              </form>
+            }
+          }
+          else if (role is null && !Model.IsPast) { <a class="btn btn-outline-secondary btn-sm" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Details", "Events", new { id = Model.Event.EventId })">Log in to enter</a> }
+        </td>
+      </tr>
+    }
+    </tbody></table></div>
+}
+
+@if (Model.Results.Count > 0)
+{
+  <h3 class="mt-4">Results</h3>
+  <div class="table-responsive"><table class="table bg-white">
+    <thead><tr><th>Category</th><th>Pos.</th><th>Participant</th><th>Finish time</th></tr></thead>
+    <tbody>
+    @foreach (var r in Model.Results)
+    {
+      <tr class="@(r.Position == 1 ? "rd-podium-1" : "")"><td>@r.CategoryName</td><td>@UiHelpers.Ordinal(r.Position)</td><td>@r.ParticipantName</td><td>@UiHelpers.Time(r.FinishTime)</td></tr>
+    }
+    </tbody></table></div>
+}
+<a class="btn btn-outline-secondary mt-3" asp-controller="Home" asp-action="Index">&larr; All events</a>

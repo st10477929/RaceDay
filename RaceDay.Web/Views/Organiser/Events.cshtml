@@ -1,0 +1,30 @@
+@model List<EventDto>
+@{ ViewData["Title"] = "My events"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">My events</h1>
+  <a class="btn btn-rd" asp-action="CreateEvent">+ Create event</a>
+</div>
+@if (Model.Count == 0) { <p class="text-muted">No events yet.</p> }
+else
+{
+  <div class="table-responsive"><table class="table align-middle bg-white">
+    <thead><tr><th></th><th>Event</th><th>Date</th><th>Location</th><th>Type</th><th class="text-end">Manage</th></tr></thead>
+    <tbody>
+    @foreach (var e in Model)
+    {
+      <tr>
+        <td style="width:90px">@if (!string.IsNullOrEmpty(e.BannerUrl)) { <img src="@e.BannerUrl" alt="" style="width:80px;height:50px;object-fit:cover;border-radius:4px" /> }</td>
+        <td>@e.EventName</td><td>@e.EventDate.ToString("d MMM yyyy")</td><td>@e.Location</td><td>@e.EventType</td>
+        <td class="text-end text-nowrap">
+          <a class="btn btn-outline-secondary btn-sm" asp-action="Categories" asp-route-eventId="@e.EventId">Categories</a>
+          <a class="btn btn-outline-secondary btn-sm" asp-action="Enrolments" asp-route-eventId="@e.EventId">Enrolments</a>
+          <a class="btn btn-outline-secondary btn-sm" asp-action="Results" asp-route-eventId="@e.EventId">Results</a>
+          <a class="btn btn-outline-primary btn-sm" asp-action="EditEvent" asp-route-id="@e.EventId">Edit</a>
+          <form asp-action="DeleteEvent" asp-route-id="@e.EventId" method="post" class="d-inline" onsubmit="return confirm('Delete this event?');">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    }
+    </tbody></table></div>
+}

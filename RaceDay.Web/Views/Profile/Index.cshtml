@@ -1,0 +1,27 @@
+@model ProfileViewModel
+@{ ViewData["Title"] = "My profile"; var initial = string.IsNullOrEmpty(Model.FullName) ? "?" : Model.FullName.Substring(0, 1).ToUpper(); }
+<h1 class="mb-4">My profile</h1>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card card-body text-center">
+      @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl)) { <img class="rd-avatar mx-auto mb-3" src="@Model.ProfilePictureUrl" alt="Profile picture" /> }
+      else { <div class="rd-avatar mx-auto mb-3">@initial</div> }
+      <span class="badge rd-role align-self-center mb-3">@Model.Role</span>
+      <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" class="form-control mb-2" accept="image/jpeg,image/png,image/webp" required />
+        <button class="btn btn-rd w-100" type="submit">Upload picture</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card card-body">
+      <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+      <form asp-action="Update" method="post">
+        <div class="mb-3"><label class="form-label">Email</label><input class="form-control" value="@Model.Email" disabled /></div>
+        <div class="mb-3"><label asp-for="FullName" class="form-label"></label><input asp-for="FullName" class="form-control" /><span asp-validation-for="FullName" class="text-danger"></span></div>
+        <div class="mb-3"><label asp-for="PhoneNumber" class="form-label"></label><input asp-for="PhoneNumber" class="form-control" /><span asp-validation-for="PhoneNumber" class="text-danger"></span></div>
+        <button class="btn btn-rd" type="submit">Save changes</button>
+      </form>
+    </div>
+  </div>
+</div>
